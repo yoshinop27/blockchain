@@ -7,4 +7,3 @@
   <suppress checks="MissingJavadocMethod" files=".*Tests.java"/>
   <suppress checks="MissingJavadocType" files=".*Tests.java"/>
 </suppressions>
-        
