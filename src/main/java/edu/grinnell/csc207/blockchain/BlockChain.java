@@ -56,6 +56,7 @@ public class BlockChain {
         Node n = new Node(blk);
         last.next = n;
         last = n;
+        size++;
     }
 
     /**
@@ -81,6 +82,7 @@ public class BlockChain {
             prev = cur;
             cur = cur.next;
         }
+        prev.next = null;
         last = prev;
         size--;
         return true;
@@ -90,7 +92,7 @@ public class BlockChain {
      * 
      * @return last hash
      */
-    public Hash getHast(){
+    public Hash getHash(){
         return last.cur.getHash();
     }
     
@@ -125,6 +127,7 @@ public class BlockChain {
                 alice += transaction;
                 bob -= transaction;
             }
+            cur = cur.next;
         }
         System.out.printf("Alice: %d, Bob: %d%n", alice, bob);
     }
@@ -137,6 +140,8 @@ public class BlockChain {
         String ret = "";
         while (cur != null){
             ret += cur.cur.toString();
+            ret += "\n";
+            cur = cur.next;
         }
         return ret;
     }

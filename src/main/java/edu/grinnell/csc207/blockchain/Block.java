@@ -12,13 +12,14 @@ public class Block {
     private long number;
     private long data;
     private Hash prev;
-    private long nonce; 
+    private long nonce;
     private Hash cur;
 
     /**
      * Creates a new block
-     * @param num an integer representing the block number
-     * @param amount is the integer amount of the transaction
+     * 
+     * @param num      an integer representing the block number
+     * @param amount   is the integer amount of the transaction
      * @param prevHash the hash of the previous block
      * @throws NoSuchAlgorithmException
      */
@@ -28,12 +29,13 @@ public class Block {
         this.prev = prevHash;
 
         // Create message digest
-        MessageDigest md = MessageDigest.getInstance("sha-256");
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
 
         for (long i = 0;; i++) {
             md.update(longToBytes(number));
             md.update(longToBytes(data));
-            if (this.prev != null) md.update(prev.getData()); // only update if prev != null
+            if (this.prev != null)
+                md.update(prev.getData()); // only update if prev != null
             // testing the nonce
             md.update(longToBytes(i));
             byte[] bytes_hash = md.digest(); // Get hash in bytes
@@ -46,50 +48,55 @@ public class Block {
         }
     }
 
-     /**
+    /**
      * Creates a new block
-     * @param num an integer representing the block number
-     * @param amount is the integer amount of the transaction
+     * 
+     * @param num      an integer representing the block number
+     * @param amount   is the integer amount of the transaction
      * @param prevHash the hash of the previous block
-     * @param nonce a number used in hashing
+     * @param nonce    a number used in hashing
      * @throws NoSuchAlgorithmException
      */
-    public Block(int num, int amount, Hash prevHash, long nonce) throws NoSuchAlgorithmException {
+    public Block(int num, int amount, Hash prevHash, long nonce) throws NoSuchAlgorithmException, IllegalArgumentException {
         this.number = (long) num;
         this.data = (long) amount;
         this.prev = prevHash;
         this.nonce = nonce;
 
         // Create message digest
-        MessageDigest md = MessageDigest.getInstance("sha-256");
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
         md.update(longToBytes(number));
         md.update(longToBytes(data));
-        md.update(prev.getData());
+        if (this.prev != null)
+            md.update(prev.getData());
         md.update(longToBytes(nonce));
-        byte[] bytes_hash = md.digest(); // Get hash in bytes
-        Hash h = new Hash(bytes_hash); // Create hash object
-        if (h.isValid()) this.cur = h;
+        byte[] bytes_hash = md.digest();
+        Hash h = new Hash(bytes_hash);
+        if (!h.isValid()) {
+            throw new IllegalArgumentException("Provided nonce does not produce a valid hash");
+        }
+        this.cur = h;
     }
 
     /**
      * @return block number
      */
-    public int getNum(){
-        return (int)this.number;
+    public int getNum() {
+        return (int) this.number;
     }
 
     /**
      * 
      * @return block transaction amount
      */
-    public int getAmount(){
-        return (int)this.data;
+    public int getAmount() {
+        return (int) this.data;
     }
 
     /**
      * @return nonce of block
      */
-    public long getNonce(){
+    public long getNonce() {
         return this.nonce;
     }
 
@@ -97,7 +104,7 @@ public class Block {
      * 
      * @return current hash
      */
-    public Hash getHash(){
+    public Hash getHash() {
         return this.cur;
     }
 
@@ -105,7 +112,7 @@ public class Block {
      * 
      * @return previous blocks hash
      */
-    public Hash getPrevHash(){
+    public Hash getPrevHash() {
         return this.prev;
     }
 
@@ -113,8 +120,10 @@ public class Block {
      * @return a string representation of our block
      */
     public String toString() {
-        return String.format(
-            "Block %d (Amount: %d, Nonce: %d, prevHash: %s, hash: %s)", number, data, nonce, prev.toString(), cur.toString());
+        String prevStr = (prev == null) ? "null" : prev.toString();
+        String curStr = (cur == null) ? "null" : cur.toString();
+        return String.format("Block %d (Amount: %d, Nonce: %d, prevHash: %s, hash: %s)",
+                number, data, nonce, prevStr, curStr);
     }
 
     /**
