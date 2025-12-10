@@ -3,8 +3,7 @@ package edu.grinnell.csc207.blockchain;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * A linked list of hash-consistent blocks representing a ledger of
- * monetary transactions.
+ * A linked list of hashed blocks representing a ledger of transactions
  */
 public class BlockChain {
     Node first;
@@ -17,7 +16,6 @@ public class BlockChain {
         Node next;
 
         /**
-         * 
          * @param cur block for this node
          */
         public Node(Block cur) {
@@ -31,7 +29,7 @@ public class BlockChain {
      * @param initial intial amount
      * @throws NoSuchAlgorithmException
      */
-    public BlockChain(int initial) throws NoSuchAlgorithmException{
+    public BlockChain(int initial) throws NoSuchAlgorithmException {
         Block genesis = new Block(0, initial, null);
         Node n = new Node(genesis);
         first = n;
@@ -40,10 +38,9 @@ public class BlockChain {
     }
 
     /**
-     * 
      * @return size of blockchain
      */
-    public int getSize(){
+    public int getSize() {
         return size;
     }
 
@@ -52,7 +49,7 @@ public class BlockChain {
      * @param blk block to add
      * @throws IllegalArgumentException
      */
-    public void append(Block blk) throws IllegalArgumentException{
+    public void append(Block blk) throws IllegalArgumentException {
         Node n = new Node(blk);
         last.next = n;
         last = n;
@@ -60,12 +57,11 @@ public class BlockChain {
     }
 
     /**
-     * 
      * @param amount transaction amount
      * @return new block
      * @throws NoSuchAlgorithmException
      */
-    public Block mine(int amount) throws NoSuchAlgorithmException{
+    public Block mine(int amount) throws NoSuchAlgorithmException {
         Block b = new Block(size, amount, last.cur.getHash());
         return b;
     }
@@ -74,11 +70,13 @@ public class BlockChain {
      * remove last block
      * @return false if blockchain has one element, true if a removal occurs
      */
-    public boolean removeLast(){
-        if (size == 1) return false;
+    public boolean removeLast() {
+        if (size == 1) {
+            return false;
+        }
         Node cur = first;
         Node prev = null;
-        while (cur != last){
+        while (cur != last) {
             prev = cur;
             cur = cur.next;
         }
@@ -89,23 +87,23 @@ public class BlockChain {
     }
 
     /**
-     * 
      * @return last hash
      */
-    public Hash getHash(){
+    public Hash getHash() {
         return last.cur.getHash();
     }
     
     /**
-     * 
      * @return true if blockchain is valid, false otherwise
      */
-    public boolean isValidBlockChain(){
+    public boolean isValidBlockChain() {
         int balance = first.cur.getAmount(); // initial balance
         Node cur = first.next;
-        while(cur!=null){
+        while (cur != null) {
             balance += cur.cur.getAmount(); // check transaction amount
-            if (balance < 0) return false;
+            if (balance < 0) {
+                return false;
+            }
             cur = cur.next;
         }
         return true;
@@ -114,13 +112,13 @@ public class BlockChain {
     /**
      * print balances
      */
-    public void printBalance(){
+    public void printBalance() {
         int alice = first.cur.getAmount(); 
         int bob = 0;
         Node cur = first.next;
-        while(cur!=null){
+        while (cur != null) {
             int transaction = cur.cur.getAmount();
-            if (transaction > 0){
+            if (transaction > 0) {
                 alice += transaction;
                 bob -= transaction;
             } else {
@@ -135,10 +133,10 @@ public class BlockChain {
     /**
      * @return string representation of block chain
      */
-    public String toString(){
+    public String toString() {
         Node cur = first;
         String ret = "";
-        while (cur != null){
+        while (cur != null) {
             ret += cur.cur.toString();
             ret += "\n";
             cur = cur.next;

@@ -4,20 +4,21 @@ import java.util.Scanner;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * The main driver for the block chain program.
+ * The main driver for the block chain program
  */
 public class BlockChainDriver {
 
     /**
-     * The main entry point for the program.
+     * The main entry point for the program
      * 
      * @param args the command-line arguments
      * @throws NoSuchAlgorithmException
      * @throws NumberFormatException
      */
     public static void main(String[] args) throws NumberFormatException, NoSuchAlgorithmException {
-        if (args.length == 0)
+        if (args.length == 0) {
             return;
+        }
         boolean running = true;
         BlockChain b = new BlockChain(Integer.valueOf(args[0]));
         Scanner scanner = new Scanner(System.in);
@@ -54,8 +55,8 @@ public class BlockChainDriver {
                     break;
                 case "help":
                     System.out.println("Valid Commands:");
-                    System.out.println("    append: appends a new block onto the end of the chain");
-                    System.out.println("    remove: removes the last block from the end of the chain");
+                    System.out.println("    append: appends a new block onto the end");
+                    System.out.println("    remove: removes the last block from the chain");
                     System.out.println("    check: checks that the block chain is valid");
                     System.out.println("    report: reports the balances of Alice and Bob");
                     System.out.println("    help: prints this list of commands");
